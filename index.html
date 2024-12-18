@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Chatbot VDM</title>
+
     <style>
         /* รีเซ็ต CSS */
         * {
@@ -156,13 +157,50 @@
                 padding: 12px 18px;
             }
         }
+
+        .chat-header {
+            display: flex;
+            flex-direction: row;
+            /* ให้เรียงแนวตั้ง */
+            align-items: center;
+            /* จัดกึ่งกลางแนวนอน */
+            justify-content: center;
+            /* จัดกึ่งกลางแนวตั้ง */
+            background: linear-gradient(90deg, #4c8bf5, #2b65d9);
+            color: #ffffff;
+            padding: 15px 10;
+            font-size: 1.5rem;
+            font-weight: bold;
+            position: relative;
+            
+        }
+
+        .center-logo {
+            width: 100px;
+            /* ปรับขนาดโลโก้ */
+            height: auto;
+            margin-right: 10px;
+            /* ขยับโลโก้ไปทางขวา */
+            margin-bottom: 5px;
+            /* ระยะห่างโลโก้กับข้อความ */
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-text {
+            text-align: center;
+            font-size: 2rem;
+        }
     </style>
 </head>
 
 <body>
     <div class="chat-container">
         <!-- Header -->
-        <div class="chat-header">AI Chat VDM Pro2</div>
+        <div class="chat-header">
+            <img src="image/feed.jpg" alt="Logo" class="center-logo">
+            <div class="header-text">AI Chat VDM Pro2</div>
+        </div>
 
         <!-- Chat Log -->
         <div class="chat-log" id="chat-log"></div>
@@ -201,10 +239,10 @@
                 const result = await response.json();
 
                 // สร้างคำตอบที่มีการอ้างอิง Context การสนทนาก่อนหน้า
-                return `I really don't understand this part of the question. I will learn and update more information soon 😊 However, you may try contacting the Admin to resolve this issue again.`;
+                return `I don't quite understand the question you're asking. Can you please provide more specific words or details? 😊`;
             } catch (error) {
-                console.error("เกิดข้อผิดพลาดในการบันทึกคำถาม:", error);
-                return "เกิดข้อผิดพลาดในการเชื่อมต่อฐานข้อมูล ❌";
+                console.error("There was an error saving the question:", error);
+                return "An error occurred connecting to the database. ❌";
             }
         }
 
@@ -281,11 +319,9 @@
         }
 
 
-
-
-
-
         let conversationHistory = []; // เก็บประวัติการสนทนาทั้งหมด
+
+        let unknownResponseCount = 0; // ตัวแปรสำหรับนับจำนวนครั้งที่ Bot ไม่เข้าใจ
 
         async function sendMessage() {
             const userInput = document.getElementById("user-input");
@@ -308,8 +344,16 @@
                     let answer = findClosestMatch(message, data);
 
                     if (!answer) {
-                        // หากไม่พบคำตอบ ให้บันทึกคำถามใหม่
-                        answer = await logUserQuestion(message);
+                        unknownResponseCount += 1; // เพิ่มตัวนับถ้า Bot ไม่เข้าใจคำถาม
+
+                        if (unknownResponseCount >= 2) {
+                            answer = `Okay, I'm starting to confuse you. Just type in "I'm fine" and we'll start the conversation again.`;
+                            unknownResponseCount = 0; // รีเซ็ตตัวนับ
+                        } else {
+                            answer = await logUserQuestion(message);
+                        }
+                    } else {
+                        unknownResponseCount = 0; // รีเซ็ตตัวนับหากพบคำตอบ
                     }
 
                     hideTypingIndicator(); // ซ่อนสถานะ Bot กำลังพิมพ์
@@ -321,7 +365,7 @@
                     addMessage("Bot", answer, "bot-message");
                 } catch (error) {
                     hideTypingIndicator();
-                    addMessage("Bot", "เกิดข้อผิดพลาดในการเชื่อมต่อ API ❌", "bot-message");
+                    addMessage("Bot", "An error occurred connecting to the API. ❌", "bot-message");
                 }
             }
         }
@@ -330,7 +374,7 @@
             const userMessage = message.toLowerCase();
 
             // คำที่ทำให้ Context ถูกเคลียร์
-            const resetKeywords = ["thank you", "thanks", "hi", "hello", "ok", "done", "finish"];
+            const resetKeywords = ["thank you", "thanks", "hi", "hello", "ok", "done", "finish", "I'm fine"];
 
             // ตรวจหาคำที่ตัดจบบทสนทนา
             if (resetKeywords.some(keyword => userMessage.includes(keyword))) {
