@@ -325,51 +325,52 @@
         let unknownResponseCount = 0; // ตัวแปรสำหรับนับจำนวนครั้งที่ Bot ไม่เข้าใจ
 
         async function sendMessage() {
-            const userInput = document.getElementById("user-input");
-            let message = userInput.value.trim();
+    const userInput = document.getElementById("user-input");
+    let message = userInput.value.trim();
 
-            if (message !== "") {
-                addMessage("คุณ", message, "user-message");
-                userInput.value = "";
+    // ตรวจจับข้อความว่ามีเฉพาะภาษาอังกฤษหรือไม่
+    const englishRegex = /^[a-zA-Z0-9\s.,?!'"()-]+$/;
 
-                try {
-                    showTypingIndicator(); // แสดงสถานะ Bot กำลังพิมพ์
+    if (message !== "") {
+        // เพิ่มข้อความผู้ใช้ในแชท
+        addMessage("You", message, "user-message");
 
-                    const response = await fetch(apiUrl);
-                    const data = await response.json();
-
-                    // ประมวลผล Context ก่อนหน้าและตรวจหาคำใกล้เคียงในฐานข้อมูล
-                    message = processContext(conversationHistory, message, data);
-
-                    // ตรวจหาคำตอบที่ตรงหรือใกล้เคียง
-                    let answer = findClosestMatch(message, data);
-
-                    if (!answer) {
-                        unknownResponseCount += 1; // เพิ่มตัวนับถ้า Bot ไม่เข้าใจคำถาม
-
-                        if (unknownResponseCount >= 2) {
-                            answer = `Okay, I'm starting to confuse you. Just type in "I'm fine" and we'll start the conversation again.`;
-                            unknownResponseCount = 0; // รีเซ็ตตัวนับ
-                        } else {
-                            answer = await logUserQuestion(message);
-                        }
-                    } else {
-                        unknownResponseCount = 0; // รีเซ็ตตัวนับหากพบคำตอบ
-                    }
-
-                    hideTypingIndicator(); // ซ่อนสถานะ Bot กำลังพิมพ์
-
-                    // บันทึกประวัติการสนทนา
-                    conversationHistory.push({ user: message, bot: answer });
-
-                    // เพิ่มข้อความจาก Bot
-                    addMessage("Bot", answer, "bot-message");
-                } catch (error) {
-                    hideTypingIndicator();
-                    addMessage("Bot", "An error occurred connecting to the API. ❌", "bot-message");
-                }
-            }
+        // ตรวจสอบภาษา
+        if (!englishRegex.test(message)) {
+            addMessage("Bot", "Sorry, I only support English. 😊", "bot-message");
+            userInput.value = ""; // เคลียร์ช่องป้อนข้อความ
+            return; // หยุดการทำงานถ้าไม่ใช่ภาษาอังกฤษ
         }
+
+        userInput.value = ""; // เคลียร์ช่องป้อนข้อความ
+
+        try {
+            showTypingIndicator(); // แสดงสถานะ Bot กำลังพิมพ์
+
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+
+            // ตรวจหาคำตอบที่ตรงหรือใกล้เคียง
+            message = processContext(conversationHistory, message, data);
+            let answer = findClosestMatch(message, data);
+
+            if (!answer) {
+                answer = await logUserQuestion(message);
+            }
+
+            hideTypingIndicator(); // ซ่อนสถานะ Bot กำลังพิมพ์
+
+            // เพิ่มข้อความจาก Bot
+            addMessage("Bot", answer, "bot-message");
+
+            // บันทึกประวัติการสนทนา
+            conversationHistory.push({ user: message, bot: answer });
+        } catch (error) {
+            hideTypingIndicator();
+            addMessage("Bot", "An error occurred connecting to the API. ❌", "bot-message");
+        }
+    }
+}
 
         function processContext(history, message, data) {
             const userMessage = message.toLowerCase();
