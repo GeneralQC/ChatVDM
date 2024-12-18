@@ -6,168 +6,170 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Chatbot VDM</title>
     <style>
-         /* รีเซ็ต CSS */
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    /* Body */
-    body {
-        font-family: 'Arial', sans-serif;
-        background-color: #f9f9f9;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        padding: 20px;
-    }
-
-    /* Container */
-    .chat-container {
-        width: 100%;
-        max-width: 450px;
-        height: 80vh;
-        background-color: #ffffff;
-        border-radius: 12px;
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-    }
-
-    /* Header */
-    .chat-header {
-        background-color: #0b74de;
-        color: #ffffff;
-        text-align: center;
-        padding: 15px;
-        font-size: 1.2rem;
-        font-weight: bold;
-    }
-
-    /* Chat Log */
-    .chat-log {
-        flex: 1;
-        padding: 15px;
-        overflow-y: auto;
-        background-color: #f4f4f4;
-    }
-
-    /* ข้อความในแชท */
-    .chat-message {
-        margin: 10px 0;
-        max-width: 70%;
-        padding: 10px 15px;
-        border-radius: 10px;
-        line-height: 1.4;
-        word-wrap: break-word;
-    }
-
-    .user-message {
-        background-color: #0b74de;
-        color: #ffffff;
-        margin-left: auto;
-        text-align: left;
-    }
-
-    .bot-message {
-        background-color: #e4e6eb;
-        color: #333333;
-        text-align: left;
-    }
-
-    /* Chat Input */
-    .chat-input {
-        display: flex;
-        border-top: 1px solid #ddd;
-        background-color: #fff;
-        padding: 10px;
-    }
-
-    .chat-input input {
-        flex: 1;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        outline: none;
-        font-size: 1rem;
-    }
-
-    .chat-input button {
-        margin-left: 10px;
-        background-color: #0b74de;
-        color: #ffffff;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 1rem;
-    }
-
-    .chat-input button:hover {
-        background-color: #005bb5;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .chat-container {
-            height: 90vh;
-            border-radius: 0;
+        /* รีเซ็ต CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .chat-header {
-            font-size: 1rem;
-            padding: 10px;
-        }
-
-        .chat-input input {
-            font-size: 0.9rem;
-            padding: 8px;
-        }
-
-        .chat-input button {
-            font-size: 0.9rem;
-            padding: 8px 15px;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .chat-container {
+        /* Body */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            display: flex;
+            justify-content: center;
+            align-items: center;
             height: 100vh;
-            border-radius: 0;
         }
 
+        /* Chat Container */
+        .chat-container {
+            width: 100%;
+            max-width: 600px;
+            height: 90vh;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        /* Header */
         .chat-header {
-            font-size: 0.9rem;
-            padding: 8px;
+            background: linear-gradient(90deg, #4c8bf5, #2b65d9);
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+            font-size: 1.8rem;
+            font-weight: 600;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Chat Log */
+        .chat-log {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: #f9f9f9;
+        }
+
+        .chat-message {
+            margin: 10px 0;
+            max-width: 70%;
+            padding: 12px 18px;
+            border-radius: 15px;
+            line-height: 1.5;
+            word-wrap: break-word;
+            font-size: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-message {
+            background: #4c8bf5;
+            color: #ffffff;
+            margin-left: auto;
+        }
+
+        .bot-message {
+            background: #e4e6eb;
+            color: #333333;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            font-size: 1.1rem;
+            color: #999;
+            animation: typingDots 1s infinite steps(3);
+        }
+
+        @keyframes typingDots {
+
+            0%,
+            33% {
+                content: ".";
+            }
+
+            66% {
+                content: "..";
+            }
+
+            100% {
+                content: "...";
+            }
+        }
+
+        /* Chat Input Bar */
+        .chat-input {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-top: 1px solid #ddd;
+            background: #ffffff;
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .chat-input input {
-            font-size: 0.8rem;
-            padding: 6px;
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #4c8bf5;
+            border-radius: 30px;
+            font-size: 1rem;
+            outline: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .chat-input button {
-            font-size: 0.8rem;
-            padding: 6px 12px;
+            margin-left: 10px;
+            background: linear-gradient(90deg, #4c8bf5, #2b65d9);
+            color: #ffffff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
-    }
+
+        .chat-input button:hover {
+            background: #2b65d9;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .chat-header {
+                font-size: 1.5rem;
+                padding: 15px;
+            }
+
+            .chat-input input {
+                font-size: 1rem;
+                padding: 12px;
+            }
+
+            .chat-input button {
+                font-size: 1rem;
+                padding: 12px 18px;
+            }
+        }
     </style>
 </head>
 
 <body>
     <div class="chat-container">
         <!-- Header -->
-        <div class="chat-header">AI Chat VDM Pro-5</div>
+        <div class="chat-header">AI Chat VDM Pro2</div>
 
         <!-- Chat Log -->
         <div class="chat-log" id="chat-log"></div>
 
         <!-- Chat Input -->
         <div class="chat-input">
-            <input type="text" id="user-input" placeholder="Type your message here...">
+            <input type="text" id="user-input" placeholder="Type your message...">
             <button onclick="sendMessage()">Send</button>
         </div>
     </div>
@@ -189,114 +191,169 @@
         }
 
         async function logUserQuestion(message) {
-    try {
-        // ส่งคำถามไปที่ API (POST)
-        const response = await fetch(apiUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: `userInput=${encodeURIComponent(message)}`
-        });
-        const result = await response.json();
+            try {
+                // ส่งคำถามไปที่ API (POST)
+                const response = await fetch(apiUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: `userInput=${encodeURIComponent(message)}`
+                });
+                const result = await response.json();
 
-        // สร้างคำตอบที่มีการอ้างอิง Context การสนทนาก่อนหน้า
-        return `I really don't understand this part of the question. I will learn and update more information soon 😊 However, you may try contacting the Admin to resolve this issue again.`;
-    } catch (error) {
-        console.error("เกิดข้อผิดพลาดในการบันทึกคำถาม:", error);
-        return "เกิดข้อผิดพลาดในการเชื่อมต่อฐานข้อมูล ❌";
-    }
-}
-
-function findClosestMatch(userInput, data) {
-    let closestMatch = null;
-    let highestSimilarity = 0;
-
-    for (let item of data) {
-        const similarity = calculateSimilarity(userInput, item.user);
-        if (similarity > highestSimilarity) {
-            highestSimilarity = similarity;
-            closestMatch = item.answer;
+                // สร้างคำตอบที่มีการอ้างอิง Context การสนทนาก่อนหน้า
+                return `I really don't understand this part of the question. I will learn and update more information soon 😊 However, you may try contacting the Admin to resolve this issue again.`;
+            } catch (error) {
+                console.error("เกิดข้อผิดพลาดในการบันทึกคำถาม:", error);
+                return "เกิดข้อผิดพลาดในการเชื่อมต่อฐานข้อมูล ❌";
+            }
         }
-    }
 
-    return highestSimilarity >= 0.5 ? closestMatch : null; // กำหนด threshold
-}
+        // ฟังก์ชันแสดงสถานะ Bot กำลังพิมพ์
+        function showTypingIndicator() {
+            const chatLog = document.getElementById("chat-log");
+            const typingIndicator = document.createElement("div");
+            typingIndicator.classList.add("chat-message", "bot-message", "typing-indicator");
+            typingIndicator.textContent = "..."; // แสดงไข่ปลา
+            typingIndicator.id = "typing-indicator"; // ตั้ง ID เพื่อให้ลบออกง่าย
+            chatLog.appendChild(typingIndicator);
+            chatLog.scrollTop = chatLog.scrollHeight; // เลื่อนแชทไปด้านล่างสุด
+        }
 
-function calculateSimilarity(str1, str2) {
-    const words1 = str1.toLowerCase().split(" ");
-    const words2 = str2.toLowerCase().split(" ");
-    const matches = words1.filter(word => words2.includes(word));
-    return matches.length / Math.max(words1.length, words2.length);
-}
+        // ฟังก์ชันลบสถานะ Bot กำลังพิมพ์
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById("typing-indicator");
+            if (typingIndicator) {
+                typingIndicator.remove(); // ลบออกจาก DOM
+            }
+        }
+
+        // Synonym Mapping (จับคู่คำใกล้เคียง)
+        const synonyms = {
+            "hi": ["hello", "hey", "hiya"],
+            "thanks": ["thank you", "thx", "appreciate"],
+            "error": ["problem", "issue", "bug"],
+            "stuck": ["freeze", "hang", "stop"]
+        };
+
+        // ฟังก์ชันจับคู่ Synonym
+        function matchSynonyms(userInput, data) {
+            const words = tokenize(userInput); // แยกคำออกจากข้อความ
+            for (let word of words) {
+                for (let key in synonyms) {
+                    if (synonyms[key].includes(word)) {
+                        userInput = userInput.replace(word, key); // แทนที่คำใกล้เคียง
+                    }
+                }
+            }
+            return userInput;
+        }
+
+        // ฟังก์ชันทำความสะอาดข้อความและตัดคำ
+        function cleanText(text) {
+            return text.toLowerCase().replace(/[^\w\s]/gi, '').trim();
+        }
+
+        function tokenize(text) {
+            return cleanText(text).split(" "); // ตัดคำแยกเป็น Array
+        }
 
 
+        function findClosestMatch(userInput, data) {
+            let closestMatch = null;
+            let highestSimilarity = 0;
 
-
-
-
-let conversationHistory = []; // เก็บประวัติการสนทนาทั้งหมด
-
-async function sendMessage() {
-    const userInput = document.getElementById("user-input");
-    let message = userInput.value.trim();
-
-    if (message !== "") {
-        addMessage("คุณ", message, "user-message");
-        userInput.value = "";
-
-        try {
-            const response = await fetch(apiUrl);
-            const data = await response.json();
-
-            // ประมวลผล Context ก่อนหน้าและตรวจหาคำใกล้เคียงในฐานข้อมูล
-            message = processContext(conversationHistory, message, data);
-
-            // ตรวจหาคำตอบที่ตรงหรือใกล้เคียง
-            let answer = findClosestMatch(message, data);
-
-            if (!answer) {
-                // หากไม่พบคำตอบ ให้บันทึกคำถามใหม่
-                answer = await logUserQuestion(message);
+            for (let item of data) {
+                const similarity = calculateSimilarity(userInput, item.user);
+                if (similarity > highestSimilarity) {
+                    highestSimilarity = similarity;
+                    closestMatch = item.answer;
+                }
             }
 
-            // บันทึกประวัติการสนทนา
-            conversationHistory.push({ user: message, bot: answer });
-
-            // เพิ่มข้อความจาก Bot
-            addMessage("Bot", answer, "bot-message");
-        } catch (error) {
-            addMessage("Bot", "เกิดข้อผิดพลาดในการเชื่อมต่อ API ❌", "bot-message");
+            return highestSimilarity >= 0.5 ? closestMatch : null; // กำหนด threshold
         }
-    }
-}
 
-function processContext(history, message, data) {
-    const userMessage = message.toLowerCase();
-
-    // คำที่ทำให้ Context ถูกเคลียร์
-    const resetKeywords = ["thank you", "thanks", "hi", "hello", "ok", "done", "finish"];
-
-    // ตรวจหาคำที่ตัดจบบทสนทนา
-    if (resetKeywords.some(keyword => userMessage.includes(keyword))) {
-        history.length = 0; // เคลียร์ Context
-        return message; // ใช้ข้อความปัจจุบันเป็นบริบทใหม่
-    }
-
-    // ตรวจหาคำถามที่ตรงหรือใกล้เคียงในฐานข้อมูล
-    for (let item of data) {
-        if (userMessage.includes(item.user.toLowerCase())) {
-            history.length = 0; // เคลียร์ Context เดิม
-            return message; // ใช้ข้อความปัจจุบันเป็นบริบทใหม่
+        function calculateSimilarity(str1, str2) {
+            const words1 = str1.toLowerCase().split(" ");
+            const words2 = str2.toLowerCase().split(" ");
+            const matches = words1.filter(word => words2.includes(word));
+            return matches.length / Math.max(words1.length, words2.length);
         }
-    }
 
-    // เชื่อมกับ Context เดิมถ้าไม่มีคำที่ตัดจบและไม่ตรงกับข้อมูลในฐานข้อมูล
-    if (history.length > 0) {
-        const lastContext = history[history.length - 1].user; // ข้อความก่อนหน้า
-        return `${lastContext} ${message}`.trim(); // เชื่อมข้อความก่อนหน้ากับปัจจุบัน
-    }
 
-    return message; // ถ้าไม่มี Context ก่อนหน้า ให้ใช้ข้อความปัจจุบัน
-}
+
+
+
+
+        let conversationHistory = []; // เก็บประวัติการสนทนาทั้งหมด
+
+        async function sendMessage() {
+            const userInput = document.getElementById("user-input");
+            let message = userInput.value.trim();
+
+            if (message !== "") {
+                addMessage("คุณ", message, "user-message");
+                userInput.value = "";
+
+                try {
+                    showTypingIndicator(); // แสดงสถานะ Bot กำลังพิมพ์
+
+                    const response = await fetch(apiUrl);
+                    const data = await response.json();
+
+                    // ประมวลผล Context ก่อนหน้าและตรวจหาคำใกล้เคียงในฐานข้อมูล
+                    message = processContext(conversationHistory, message, data);
+
+                    // ตรวจหาคำตอบที่ตรงหรือใกล้เคียง
+                    let answer = findClosestMatch(message, data);
+
+                    if (!answer) {
+                        // หากไม่พบคำตอบ ให้บันทึกคำถามใหม่
+                        answer = await logUserQuestion(message);
+                    }
+
+                    hideTypingIndicator(); // ซ่อนสถานะ Bot กำลังพิมพ์
+
+                    // บันทึกประวัติการสนทนา
+                    conversationHistory.push({ user: message, bot: answer });
+
+                    // เพิ่มข้อความจาก Bot
+                    addMessage("Bot", answer, "bot-message");
+                } catch (error) {
+                    hideTypingIndicator();
+                    addMessage("Bot", "เกิดข้อผิดพลาดในการเชื่อมต่อ API ❌", "bot-message");
+                }
+            }
+        }
+
+        function processContext(history, message, data) {
+            const userMessage = message.toLowerCase();
+
+            // คำที่ทำให้ Context ถูกเคลียร์
+            const resetKeywords = ["thank you", "thanks", "hi", "hello", "ok", "done", "finish"];
+
+            // ตรวจหาคำที่ตัดจบบทสนทนา
+            if (resetKeywords.some(keyword => userMessage.includes(keyword))) {
+                history.length = 0; // เคลียร์ Context
+                return message; // ใช้ข้อความปัจจุบันเป็นบริบทใหม่
+            }
+
+            // ตรวจหาคำถามที่ตรงหรือใกล้เคียงในฐานข้อมูล
+            for (let item of data) {
+                if (userMessage.includes(item.user.toLowerCase())) {
+                    history.length = 0; // เคลียร์ Context เดิม
+                    return message; // ใช้ข้อความปัจจุบันเป็นบริบทใหม่
+                }
+            }
+
+            // เชื่อมกับ Context เดิมถ้าไม่มีคำที่ตัดจบและไม่ตรงกับข้อมูลในฐานข้อมูล
+            if (history.length > 0) {
+                const lastContext = history[history.length - 1].user; // ข้อความก่อนหน้า
+                return `${lastContext} ${message}`.trim(); // เชื่อมข้อความก่อนหน้ากับปัจจุบัน
+            }
+
+            return message; // ถ้าไม่มี Context ก่อนหน้า ให้ใช้ข้อความปัจจุบัน
+        }
 
         // เพิ่มการกด Enter เพื่อส่งข้อความ
         document.getElementById("user-input").addEventListener("keypress", function (e) {
