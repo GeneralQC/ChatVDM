@@ -214,6 +214,54 @@
     </div>
 
     <script>
+
+        // ฟังก์ชันสำหรับอ่านออกเสียง
+        function readAloud(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US'; // ภาษาไทย
+            speechSynthesis.speak(utterance);
+        }
+
+        // ฟังก์ชันสร้างป๊อปอัปอีโมจิ
+        function createEmojiPopup(targetElement, text) {
+            // ลบป๊อปอัปเดิมถ้ามี
+            const existingPopup = document.getElementById('emoji-popup');
+            if (existingPopup) existingPopup.remove();
+
+            // สร้างป๊อปอัปใหม่
+            const popup = document.createElement('div');
+            popup.id = 'emoji-popup';
+            popup.style.position = 'absolute';
+            popup.style.background = '#fff';
+            popup.style.border = '1px solid #ccc';
+            popup.style.borderRadius = '10px';
+            popup.style.padding = '5px 10px';
+            popup.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+            popup.style.cursor = 'pointer';
+            popup.style.fontSize = '1.5rem';
+
+            // กำหนดตำแหน่ง
+            const rect = targetElement.getBoundingClientRect();
+            popup.style.left = `${rect.left + window.pageXOffset}px`;
+            popup.style.top = `${rect.top - 40 + window.pageYOffset}px`;
+
+            // เพิ่มอีโมจิรูปลำโพง
+            popup.textContent = '🔊';
+            popup.addEventListener('click', () => {
+                readAloud(text);
+                popup.remove(); // ลบป๊อปอัปเมื่อคลิก
+            });
+
+            document.body.appendChild(popup);
+
+            // ลบป๊อปอัปเมื่อผู้ใช้คลิกที่อื่น
+            document.addEventListener('click', (e) => {
+                if (!popup.contains(e.target) && e.target !== targetElement) {
+                    popup.remove();
+                }
+            }, { once: true });
+        }
+
         const apiUrl = "https://script.google.com/macros/s/AKfycbw8NmBDeYgjcH7R8j_WRkH-b7Y5z3w-T2OxZ85Y9uWj5fWg3ftsocUJx55053Q5k_tc/exec";
 
         
@@ -225,11 +273,25 @@
             const chatLog = document.getElementById("chat-log");
             const messageElement = document.createElement("div");
             messageElement.classList.add("chat-message", className);
-            messageElement.textContent = `${message}`;
+            messageElement.textContent = message;
             chatLog.appendChild(messageElement);
-            chatLog.scrollTop = chatLog.scrollHeight;
 
-            
+            let pressTimer; // ตัวจับเวลา
+
+            // จัดการ Event การกดค้าง
+            messageElement.addEventListener('mousedown', () => {
+                pressTimer = setTimeout(() => {
+                    createEmojiPopup(messageElement, message); // แสดงป๊อปอัป
+                }, 1000); // กดค้าง 1 วินาที
+            });
+            messageElement.addEventListener('mouseup', () => clearTimeout(pressTimer));
+            messageElement.addEventListener('mouseleave', () => clearTimeout(pressTimer));
+            messageElement.addEventListener('touchstart', () => {
+                pressTimer = setTimeout(() => {
+                    createEmojiPopup(messageElement, message); // แสดงป๊อปอัป
+                }, 1000); // กดค้าง 1 วินาที
+            });
+            messageElement.addEventListener('touchend', () => clearTimeout(pressTimer));
         }
 
         async function logUserQuestion(message) {
