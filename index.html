@@ -216,6 +216,37 @@
     <script>
         const apiUrl = "https://script.google.com/macros/s/AKfycbw8NmBDeYgjcH7R8j_WRkH-b7Y5z3w-T2OxZ85Y9uWj5fWg3ftsocUJx55053Q5k_tc/exec";
 
+        // ฟังก์ชันสำหรับอ่านออกเสียง
+        function readAloud(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US'; // กำหนดภาษาเป็นภาษาอังกฤษ (สามารถเปลี่ยนได้)
+            speechSynthesis.speak(utterance);
+        }
+
+        // เพิ่ม Event Listener ให้ข้อความในแชท
+        function enableReadAloud() {
+            const chatMessages = document.querySelectorAll('.chat-message');
+
+            chatMessages.forEach(message => {
+                let pressTimer; // ตัวจับเวลาเมื่อกดค้าง
+
+                // เมื่อเริ่มกดค้าง
+                message.addEventListener('mousedown', function () {
+                    pressTimer = setTimeout(() => {
+                        readAloud(this.textContent); // อ่านออกเสียงข้อความเมื่อกดค้าง 3 วินาที
+                    }, 3000); // เวลา 3 วินาที
+                });
+
+                // ยกเลิกการกดค้าง (ถ้าปล่อยก่อนครบเวลา)
+                message.addEventListener('mouseup', function () {
+                    clearTimeout(pressTimer); // ยกเลิกการจับเวลา
+                });
+
+                message.addEventListener('mouseleave', function () {
+                    clearTimeout(pressTimer); // ยกเลิกการจับเวลาเมื่อเลื่อนเมาส์ออก
+                });
+            });
+        }
 
 
         let conversationContext = ""; // ตัวแปรสำหรับเก็บ Context การสนทนา
@@ -227,6 +258,8 @@
             messageElement.textContent = `${message}`;
             chatLog.appendChild(messageElement);
             chatLog.scrollTop = chatLog.scrollHeight;
+
+            enableReadAloud(); // เปิดใช้งานฟังก์ชันการอ่านออกเสียง
         }
 
         async function logUserQuestion(message) {
